@@ -24,4 +24,4 @@ targets:
     doc: Run benchmark client
     steps:
     - time:
-      - $: ['go', 'run', 'client.go', 'http://localhost:8080/food/']
+      - $: ['go', 'run', 'client.go']
