@@ -1,27 +1,38 @@
 # NeON Build File (http://github.com/c4s4/neon)
 
 default: run
-extends: golang
+extends: [golang, git, changelog]
 
 properties:
   NAME:    'dvdrental'
   VERSION: '1.0.0'
+  DBHOST: 'localhost'
+  DBPORT: '5432'
+  DBNAME: 'dvdrental'
+  DBUSER: 'postgres'
+  DBPASS: 'postgres'
   LIBRARIES:
   - 'github.com/gin-gonic/gin'
   - 'github.com/lib/pq'
   - 'gopkg.in/yaml.v2'
 
 environment:
-  DBHOST: 'localhost'
-  DBPORT: '5432'
-  DBUSER: 'postgres'
-  DBPASS: 'postgres'
-  DBNAME: 'dvdrental'
+  DBHOST: =DBHOST
+  DBPORT: =DBPORT
+  DBNAME: =DBNAME
+  DBUSER: =DBUSER
+  DBPASS: =DBPASS
 
 targets:
 
-  client:
-    doc: Run benchmark client
+  actors:
+    doc: Run actor client
     steps:
     - time:
-      - $: ['go', 'run', 'client.go']
+      - $: ['go', 'run', 'client/main.go', 'actor', '200']
+
+  films:
+    doc: Run film client
+    steps:
+    - time:
+      - $: ['go', 'run', 'client/main.go', 'film', '1000']
