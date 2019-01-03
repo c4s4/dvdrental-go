@@ -6,11 +6,11 @@ extends: [golang, git, changelog]
 properties:
   NAME:    'dvdrental'
   VERSION: '1.0.0'
-  DBHOST: 'localhost'
-  DBPORT: '5432'
-  DBNAME: 'dvdrental'
-  DBUSER: 'postgres'
-  DBPASS: 'postgres'
+  DBHOST:  'localhost'
+  DBPORT:  '5432'
+  DBNAME:  'dvdrental'
+  DBUSER:  'postgres'
+  DBPASS:  'postgres'
   LIBRARIES:
   - 'github.com/gin-gonic/gin'
   - 'github.com/lib/pq'
