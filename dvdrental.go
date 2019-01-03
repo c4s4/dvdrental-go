@@ -14,9 +14,10 @@ import (
 
 const (
 	Port     = "8080"
+	Indent = "  "
 	SqlActor = `
 		SELECT
-			actor_id,
+        	actor_id,
 			first_name,
 			last_name
 		FROM actor
@@ -28,6 +29,16 @@ const (
 			release_year
 		FROM film
 		WHERE film_id = $1;
+	`
+	SqlFilmsWithActor = `
+		SELECT
+			film.film_id,
+			film.title,
+			film.release_year
+		FROM film, film_actor, actor
+		WHERE film_actor.film_id = film.film_id AND
+			film_actor.actor_id = actor.actor_id AND
+			film_actor.actor_id = $1;
 	`
 )
 
@@ -76,7 +87,7 @@ func actor(ctx *gin.Context) {
 		ctx.String(http.StatusNotFound, err.Error())
 		return
 	}
-	out, err := json.Marshal(actor)
+	out, err := json.MarshalIndent(actor, "", Indent)
 	if err != nil {
 		ctx.String(http.StatusInternalServerError, err.Error())
 		return
@@ -96,7 +107,36 @@ func film(ctx *gin.Context) {
 		ctx.String(http.StatusNotFound, err.Error())
 		return
 	}
-	out, err := json.Marshal(film)
+	out, err := json.MarshalIndent(film, "", Indent)
+	if err != nil {
+		ctx.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	ctx.String(http.StatusOK, string(out))
+}
+
+func filmsWithActor(ctx *gin.Context) {
+	actorID := ctx.Param("actor_id")
+	rows, err := db.Query(SqlFilmsWithActor, actorID)
+	if err != nil {
+		ctx.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	defer rows.Close()
+	films := []Film{}
+	for rows.Next() {
+		film := Film{}
+		err := rows.Scan(
+			&film.Id,
+			&film.Title,
+			&film.Year)
+		if err != nil {
+			ctx.String(http.StatusNotFound, err.Error())
+			return
+		}
+		films = append(films, film)
+	}
+	out, err := json.MarshalIndent(films, "", Indent)
 	if err != nil {
 		ctx.String(http.StatusInternalServerError, err.Error())
 		return
@@ -108,6 +148,7 @@ func setupRouter() *gin.Engine {
 	router := gin.Default()
 	router.GET("/actor/:id", actor)
 	router.GET("/film/:id", film)
+	router.GET("/films/actor/:actor_id", filmsWithActor)
 	return router
 }
 
