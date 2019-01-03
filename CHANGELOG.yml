@@ -6,6 +6,6 @@
   added:
   - "Added '/films/actor/:actor_id' operation to get all films with given actor"
 
-  - version: 1.0.0
+- version: 1.0.0
   date:    2019-01-03
   summary: First release
