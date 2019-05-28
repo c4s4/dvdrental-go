@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	URL = "http://localhost:"
+	URL  = "http://localhost:"
 	Port = "8080"
 	Size = 2
 )
