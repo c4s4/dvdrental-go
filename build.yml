@@ -10,7 +10,8 @@ properties:
   DBPORT:  '5432'
   DBNAME:  'dvdrental'
   DBUSER:  'postgres'
-  DBPASS:  'postgres'
+  DBPASS:  ''
+  PACKAGE: '.'
   LIBRARIES:
   - 'github.com/gin-gonic/gin'
   - 'github.com/lib/pq'
