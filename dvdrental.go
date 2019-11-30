@@ -14,7 +14,7 @@ import (
 
 const (
 	Port     = "8080"
-	Indent = "  "
+	Indent   = "  "
 	SqlActor = `
 		SELECT
         	actor_id,
