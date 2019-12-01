@@ -1,11 +1,13 @@
-# NeON Build File (http://github.com/c4s4/neon)
+# NeON build file (http://github.com/c4s4/neon)
 
-default: run
-extends: [golang, git-master]
+extends: golang
+default: [fmt, check, test]
+expose:  [fmt, check, test, release]
+configuration: '~/.neon/github.yml'
+# GITHUB_TOKEN: 'abcdefghijklmnopqrstuvwxyz0123456789'
 
 properties:
   NAME:    'dvdrental'
-  VERSION: '1.0.0'
   PACKAGE: '.'
   LIBRARIES:
   - 'github.com/gin-gonic/gin'
