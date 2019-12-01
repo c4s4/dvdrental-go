@@ -14,7 +14,7 @@ func TestPingRoute(t *testing.T) {
 	if recorder.Code != 200 {
 		t.Errorf("%d != 200\n", recorder.Code)
 	}
-	if recorder.Body.String() != `{"Id":1,"FirstName":"Penelope","LastName":"Guiness"}` {
+	if recorder.Body.String() != `{"Id":1,"FirstName":"Penelope","LastName":"Guinness"}` {
 		t.Errorf("Bad response: %s", recorder.Body.String())
 	}
 }

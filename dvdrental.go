@@ -13,16 +13,20 @@ import (
 )
 
 const (
-	Port     = "8080"
-	Indent   = "  "
-	SqlActor = `
+	// Port that server listens
+	Port = "8080"
+	// Indent is for indentation
+	Indent = "  "
+	// SQLActor is the query to get an actor by ID
+	SQLActor = `
 		SELECT
         	actor_id,
 			first_name,
 			last_name
 		FROM actor
 		WHERE actor_id = $1;`
-	SqlFilm = `
+	// SQLFilm is the query to get a film by ID
+	SQLFilm = `
 		SELECT
 			film_id,
 			title,
@@ -30,7 +34,8 @@ const (
 		FROM film
 		WHERE film_id = $1;
 	`
-	SqlFilmsWithActor = `
+	// SQLFilmsWithActor is the query to get films with given actor by ID
+	SQLFilmsWithActor = `
 		SELECT
 			film.film_id,
 			film.title,
@@ -42,20 +47,23 @@ const (
 	`
 )
 
+// Actor is the struct for an actor
 type Actor struct {
-	Id        int
+	ID        int
 	FirstName string
 	LastName  string
 }
 
+// Film is the struct tor a film
 type Film struct {
-	Id    int
+	ID    int
 	Title string
 	Year  int
 }
 
 var db *sql.DB
 
+// ConnectDb connects to database
 func ConnectDb() error {
 	var err error
 	config := fmt.Sprintf("host='%s' port='%s' user='%s' password='%s' dbname='%s' sslmode='disable'",
@@ -77,10 +85,10 @@ func ConnectDb() error {
 
 func actor(ctx *gin.Context) {
 	id := ctx.Param("id")
-	row := db.QueryRow(SqlActor, id)
+	row := db.QueryRow(SQLActor, id)
 	actor := Actor{}
 	err := row.Scan(
-		&actor.Id,
+		&actor.ID,
 		&actor.FirstName,
 		&actor.LastName)
 	if err != nil {
@@ -97,10 +105,10 @@ func actor(ctx *gin.Context) {
 
 func film(ctx *gin.Context) {
 	id := ctx.Param("id")
-	row := db.QueryRow(SqlFilm, id)
+	row := db.QueryRow(SQLFilm, id)
 	film := Film{}
 	err := row.Scan(
-		&film.Id,
+		&film.ID,
 		&film.Title,
 		&film.Year)
 	if err != nil {
@@ -117,7 +125,7 @@ func film(ctx *gin.Context) {
 
 func filmsWithActor(ctx *gin.Context) {
 	actorID := ctx.Param("actor_id")
-	rows, err := db.Query(SqlFilmsWithActor, actorID)
+	rows, err := db.Query(SQLFilmsWithActor, actorID)
 	if err != nil {
 		ctx.String(http.StatusInternalServerError, err.Error())
 		return
@@ -127,7 +135,7 @@ func filmsWithActor(ctx *gin.Context) {
 	for rows.Next() {
 		film := Film{}
 		err := rows.Scan(
-			&film.Id,
+			&film.ID,
 			&film.Title,
 			&film.Year)
 		if err != nil {
